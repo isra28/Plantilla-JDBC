@@ -211,6 +211,11 @@ public class UtilesEntrada {
 
         return string;
     }
+    
+    public static final String leerTexto (String msgUsr) {
+        System.out.print(msgUsr);
+        return SCN.nextLine();
+    }
 
     public static int leerEntero(String MSG_USR2, String MSG_ERR, int[] LISTA_IDIOMAS) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

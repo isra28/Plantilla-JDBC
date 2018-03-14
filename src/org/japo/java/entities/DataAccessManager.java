@@ -176,4 +176,34 @@ public class DataAccessManager {
             System.out.printf("Se han borrado %d modulos%n", regBorrados);
         }
     }
+    
+    public final void insertarModulosInteractivo() throws SQLException {
+        System.out.println("Inserción de modulos...");
+        //separador
+        System.out.println("---");
+        try (ResultSet rs = stmt.executeQuery(DEF_SQL_MOD)) {
+            rs.moveToInsertRow();
+            rs.updateInt (1, UtilesEntrada.leerEntero("Id ...: ", "ERROR"));
+            rs.updateString (2, UtilesEntrada.leerTexto("Acrónimo ...: "));
+            rs.updateString (3, UtilesEntrada.leerTexto("Nombre ...: "));
+            rs.updateString (4, UtilesEntrada.leerTexto("Código ...: "));
+            rs.updateInt (5, UtilesEntrada.leerEntero("Horas ...: ", "ERROR"));
+            rs.updateInt (6, UtilesEntrada.leerEntero("Curso ...: ", "ERROR"));
+            //separador
+            System.out.println("---");
+            
+            char respuesta = UtilesEntrada.leerOpcion("SsNn", "Insertar Modulo (S/N) ...: ", "ERROR: Entrada");
+            if (respuesta == 's' || respuesta == 'S') {
+                rs.insertRow();
+                //separador
+                System.out.println("---");
+                System.out.println("Inserción de datos Completada");
+            } else {
+                //separador
+                System.out.println("---");
+                System.out.println("Inserción de datos Cancelada");
+            }
+            rs.moveToCurrentRow();
+        }
+    }
 }
