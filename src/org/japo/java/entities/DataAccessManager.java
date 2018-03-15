@@ -31,6 +31,7 @@ public class DataAccessManager {
     public static final String DEF_SQL_MOD = "SELECT * FROM modulo";
     public static final String DEF_SQL_ALU = "SELECT * FROM alumno";
     public static final String DEF_SQL_PRO = "SELECT * FROM profesor";
+    public static final String DEF_SQL_MOD2 = "SELECT * FROM modulo WHERE id = '%s'";
 
     public static final String CAB_LST_MOD1 = "#   Id  Acrónimo Nombre                      Codigo Horas Curso";
     public static final String CAB_LST_MOD2 = "=== === ======== =========================== ====== ===== =====";
@@ -38,7 +39,7 @@ public class DataAccessManager {
     public static final String CAB_LST_ALU2 = "=== =========== ======== ===================== ========= ======== ======== ====================";
     public static final String CAB_LST_PRO1 = "#   Id          Nombre      Apellidos          Departamento    Especialidad     Tipo    ";
     public static final String CAB_LST_PRO2 = "=== =========== =========== ================== =============== ================ ========";
-    
+
     public static final String CAB_REG1 = "Proceso de Borrado - Registro %02d";
     public static final String CAB_REG2 = "==================================";
 
@@ -144,7 +145,7 @@ public class DataAccessManager {
         }
 
     }
-    
+
     public final void borrarModulosInteractivo() throws SQLException {
         System.out.println("Borrado de modulos ... ");
         //separador
@@ -154,16 +155,16 @@ public class DataAccessManager {
             while (rs.next()) {
                 System.out.printf(CAB_REG1 + "%n", rs.getRow());
                 System.out.println(CAB_REG2);
-                
-                System.out.printf("Id .......: %d%n",rs.getInt(1));
-                System.out.printf("Acrónimo .: %s%n",rs.getString(2));
-                System.out.printf("Nombre ...: %s%n",rs.getString(3));
-                System.out.printf("Codigo ...: %s%n",rs.getString(4));
-                System.out.printf("Horas ....: %d%n",rs.getInt(5));
-                System.out.printf("Curso ....: %d%n",rs.getInt(6));
-                
+
+                System.out.printf("Id .......: %d%n", rs.getInt(1));
+                System.out.printf("Acrónimo .: %s%n", rs.getString(2));
+                System.out.printf("Nombre ...: %s%n", rs.getString(3));
+                System.out.printf("Codigo ...: %s%n", rs.getString(4));
+                System.out.printf("Horas ....: %d%n", rs.getInt(5));
+                System.out.printf("Curso ....: %d%n", rs.getInt(6));
+
                 char respuesta = UtilesEntrada.leerOpcion("SsNn", "Borrar Modulo (S/N ...: )", "ERROR: Entrada incorrecta");
-                
+
                 if (respuesta == 'S' || respuesta == 's') {
                     rs.deleteRow();
                     regBorrados++;
@@ -176,22 +177,22 @@ public class DataAccessManager {
             System.out.printf("Se han borrado %d modulos%n", regBorrados);
         }
     }
-    
+
     public final void insertarModulosInteractivo() throws SQLException {
         System.out.println("Inserción de modulos...");
         //separador
         System.out.println("---");
         try (ResultSet rs = stmt.executeQuery(DEF_SQL_MOD)) {
             rs.moveToInsertRow();
-            rs.updateInt (1, UtilesEntrada.leerEntero("Id ...: ", "ERROR"));
-            rs.updateString (2, UtilesEntrada.leerTexto("Acrónimo ...: "));
-            rs.updateString (3, UtilesEntrada.leerTexto("Nombre ...: "));
-            rs.updateString (4, UtilesEntrada.leerTexto("Código ...: "));
-            rs.updateInt (5, UtilesEntrada.leerEntero("Horas ...: ", "ERROR"));
-            rs.updateInt (6, UtilesEntrada.leerEntero("Curso ...: ", "ERROR"));
+            rs.updateInt(1, UtilesEntrada.leerEntero("Id ...: ", "ERROR"));
+            rs.updateString(2, UtilesEntrada.leerTexto("Acrónimo ...: "));
+            rs.updateString(3, UtilesEntrada.leerTexto("Nombre ...: "));
+            rs.updateString(4, UtilesEntrada.leerTexto("Código ...: "));
+            rs.updateInt(5, UtilesEntrada.leerEntero("Horas ...: ", "ERROR"));
+            rs.updateInt(6, UtilesEntrada.leerEntero("Curso ...: ", "ERROR"));
             //separador
             System.out.println("---");
-            
+
             char respuesta = UtilesEntrada.leerOpcion("SsNn", "Insertar Modulo (S/N) ...: ", "ERROR: Entrada");
             if (respuesta == 's' || respuesta == 'S') {
                 rs.insertRow();
@@ -204,6 +205,40 @@ public class DataAccessManager {
                 System.out.println("Inserción de datos Cancelada");
             }
             rs.moveToCurrentRow();
+        }
+    }
+
+    public final void modificarModulosInteractivo() throws SQLException {
+        System.out.println("Actualización de módulos...");
+        System.out.println("---");
+        int id = UtilesEntrada.leerEntero("Id búsqueda ...: ", "ERROR: Entrada incorrecta");
+        try (ResultSet rs = stmt.executeQuery(String.format(DEF_SQL_MOD2, id + ""))) {
+            if (rs.next()) {
+                System.out.println("Registro actual - Estado INICIAL");
+                System.out.println("================================");
+                System.out.printf("Acrónimo ..: %s%n", rs.getString("acronimo"));
+                System.out.printf("Nombre ....: %s%n", rs.getString("nombre"));
+                System.out.printf("Código ....: %s%n", rs.getString("codigo"));
+                System.out.printf("Horas .....: %d%n", rs.getInt("horasCurso"));
+                System.out.printf("Curso .....: %d%n", rs.getInt("curso"));
+                System.out.println("Registro actual - Estado FINAL");
+                System.out.println("==============================");
+                rs.updateString(2, UtilesEntrada.leerTexto("Acrónimo...: "));
+                rs.updateString(3, UtilesEntrada.leerTexto("Nombre...: "));
+                rs.updateString(4, UtilesEntrada.leerTexto("Código...: "));
+                rs.updateInt(5, UtilesEntrada.leerEntero("Horas...: ", "ERROR: Lectura incorrecta"));
+                rs.updateInt(6, UtilesEntrada.leerEntero("Curso...: ", "ERROR: Lectura incorrecta"));
+                System.out.println("---");
+                char respuesta = UtilesEntrada.leerOpcion("SsNn", "Actualizar MÓDULO (S/N)...: ",
+                        "ERROR: Lectura incorrecta");
+                System.out.println("---");
+                if (respuesta == 'S' || respuesta == 's') {
+                    rs.updateRow();
+                    System.out.println("Actualización CANCELADA");
+                }
+            } else {
+                System.out.println("ERROR: No hay datos asociados");
+            }
         }
     }
 }
