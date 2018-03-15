@@ -216,12 +216,4 @@ public class UtilesEntrada {
         System.out.print(msgUsr);
         return SCN.nextLine();
     }
-
-    public static int leerEntero(String MSG_USR2, String MSG_ERR, int[] LISTA_IDIOMAS) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public static int leerEntero(String MSG_USR1, String MSG_ERR, int LUNES, int DOMINGO) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }
